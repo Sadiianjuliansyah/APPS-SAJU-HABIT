@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1"
+    >
+
+    <title>Generator Logo Saju Habit</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            margin: 0;
+            display: grid;
+            place-items: center;
+            padding: 30px 18px;
+            background:
+                radial-gradient(
+                    circle at 50% 0%,
+                    rgba(22, 135, 255, 0.25),
+                    transparent 35%
+                ),
+                #050a11;
+            color: #f5f9ff;
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        .generator {
+            width: min(100%, 950px);
+        }
+
+        .heading {
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .heading p {
+            margin: 7px 0 0;
+            color: #8da4bd;
+        }
+
+        .logo-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .logo-card {
+            border: 1px solid rgba(100, 184, 255, 0.2);
+            border-radius: 20px;
+            background: #0b1625;
+            padding: 20px;
+            text-align: center;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 18px;
+            background: #07111f;
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        h1,
+        h2 {
+            margin: 0;
+        }
+
+        h2 {
+            margin-top: 17px;
+            font-size: 1rem;
+        }
+
+        .logo-card p {
+            min-height: 42px;
+            margin: 6px 0 16px;
+            color: #7f95ad;
+            font-size: 0.78rem;
+        }
+
+        button {
+            width: 100%;
+            min-height: 44px;
+            border: 0;
+            border-radius: 11px;
+            background: linear-gradient(135deg, #1687ff, #0869d4);
+            color: #ffffff;
+            cursor: pointer;
+            font: inherit;
+            font-size: 0.82rem;
+            font-weight: 800;
+        }
+
+        button:hover {
+            filter: brightness(1.1);
+        }
+
+        .note {
+            margin-top: 20px;
+            border: 1px solid rgba(40, 209, 124, 0.2);
+            border-radius: 14px;
+            background: rgba(40, 209, 124, 0.06);
+            padding: 15px;
+            color: #9db1c7;
+            font-size: 0.8rem;
+            text-align: center;
+        }
+
+        @media (max-width: 720px) {
+            .logo-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .logo-card {
+                max-width: 380px;
+                margin: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <main class="generator">
+        <header class="heading">
+            <h1>Logo Saju Habit</h1>
+            <p>Generator ikon DH untuk aplikasi PC dan iPhone.</p>
+        </header>
+
+        <section class="logo-grid">
+            <article class="logo-card">
+                <canvas
+                    id="canvas192"
+                    width="192"
+                    height="192"
+                ></canvas>
+
+                <h2>Standard 192×192</h2>
+                <p>Digunakan untuk favicon dan ikon aplikasi berukuran kecil.</p>
+
+                <button
+                    type="button"
+                    onclick="downloadLogo(192, false, 'icon-192.png')"
+                >
+                    Unduh icon-192.png
+                </button>
+            </article>
+
+            <article class="logo-card">
+                <canvas
+                    id="canvas512"
+                    width="512"
+                    height="512"
+                ></canvas>
+
+                <h2>Standard 512×512</h2>
+                <p>Digunakan untuk ikon utama aplikasi beresolusi tinggi.</p>
+
+                <button
+                    type="button"
+                    onclick="downloadLogo(512, false, 'icon-512.png')"
+                >
+                    Unduh icon-512.png
+                </button>
+            </article>
+
+            <article class="logo-card">
+                <canvas
+                    id="canvasMaskable"
+                    width="512"
+                    height="512"
+                ></canvas>
+
+                <h2>Maskable 512×512</h2>
+                <p>Area aman untuk pemotongan ikon pada Android dan perangkat lain.</p>
+
+                <button
+                    type="button"
+                    onclick="downloadLogo(512, true, 'icon-maskable-512.png')"
+                >
+                    Unduh icon-maskable-512.png
+                </button>
+            </article>
+        </section>
+
+        <div class="note">
+            Setelah diunduh, ketiga file PNG harus dipindahkan ke folder
+            <strong>assets/icons</strong>.
+        </div>
+    </main>
+
+    <script>
+        "use strict";
+
+        function roundedRectangle(
+            context,
+            x,
+            y,
+            width,
+            height,
+            radius
+        ) {
+            context.beginPath();
+            context.moveTo(x + radius, y);
+            context.lineTo(x + width - radius, y);
+
+            context.quadraticCurveTo(
+                x + width,
+                y,
+                x + width,
+                y + radius
+            );
+
+            context.lineTo(
+                x + width,
+                y + height - radius
+            );
+
+            context.quadraticCurveTo(
+                x + width,
+                y + height,
+                x + width - radius,
+                y + height
+            );
+
+            context.lineTo(x + radius, y + height);
+
+            context.quadraticCurveTo(
+                x,
+                y + height,
+                x,
+                y + height - radius
+            );
+
+            context.lineTo(x, y + radius);
+
+            context.quadraticCurveTo(
+                x,
+                y,
+                x + radius,
+                y
+            );
+
+            context.closePath();
+        }
+
+        function drawLogo(canvas, maskable = false) {
+    const context = canvas.getContext("2d");
+    const size = canvas.width;
+
+    context.clearRect(0, 0, size, size);
+
+    // Background hitam seperti logo Saju Finance.
+    context.fillStyle = "#000000";
+    context.fillRect(0, 0, size, size);
+
+    // Cahaya biru sangat tipis di tengah.
+    const glow = context.createRadialGradient(
+        size * 0.55,
+        size * 0.5,
+        0,
+        size * 0.55,
+        size * 0.5,
+        size * 0.42
+    );
+
+    glow.addColorStop(
+        0,
+        "rgba(0, 107, 255, 0.12)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(0, 107, 255, 0)"
+    );
+
+    context.fillStyle = glow;
+    context.fillRect(0, 0, size, size);
+
+    const fontSize = size * (
+        maskable ? 0.30 : 0.35
+    );
+
+    context.font =
+        `900 ${fontSize}px "Arial Black", Arial, sans-serif`;
+
+    context.textBaseline = "middle";
+    context.textAlign = "left";
+
+    const letterSWidth =
+        context.measureText("S").width;
+
+    const letterHWidth =
+        context.measureText("H").width;
+
+    const overlap = size * 0.065;
+
+    const totalWidth =
+        letterSWidth +
+        letterHWidth -
+        overlap;
+
+    const startX =
+        (size - totalWidth) / 2;
+
+    const centerY =
+        size * 0.515;
+
+    // Huruf S putih.
+    context.shadowColor =
+        "rgba(255, 255, 255, 0.12)";
+
+    context.shadowBlur =
+        size * 0.018;
+
+    context.fillStyle = "#F7FAFF";
+
+    context.fillText(
+        "S",
+        startX,
+        centerY
+    );
+
+    // Huruf H biru elektrik.
+    context.shadowColor =
+        "rgba(0, 107, 255, 0.38)";
+
+    context.shadowBlur =
+        size * 0.025;
+
+    context.fillStyle = "#006BFF";
+
+    context.fillText(
+        "H",
+        startX + letterSWidth - overlap,
+        centerY
+    );
+
+    context.shadowColor = "transparent";
+    context.shadowBlur = 0;
+}
+
+        function downloadLogo(
+            size,
+            maskable,
+            fileName
+        ) {
+            const canvas = document.createElement("canvas");
+
+            canvas.width = size;
+            canvas.height = size;
+
+            drawLogo(canvas, maskable);
+
+            const link = document.createElement("a");
+            link.download = fileName;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        drawLogo(
+            document.getElementById("canvas192"),
+            false
+        );
+
+        drawLogo(
+            document.getElementById("canvas512"),
+            false
+        );
+
+        drawLogo(
+            document.getElementById("canvasMaskable"),
+            true
+        );
+    </script>
+</body>
+</html>

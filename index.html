@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, viewport-fit=cover"
+    >
+
+    <meta name="theme-color" content="#07111f">
+    <meta name="description" content="Saju Habit — pelacak kebiasaan pribadi dan offline.">
+
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Saju Habit">
+
+    <title>Saju Habit</title>
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icons/icon-192.png">
+    <link rel="apple-touch-icon" href="assets/icons/icon-192.png">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <noscript>
+        Aplikasi Saju Habit membutuhkan JavaScript agar dapat digunakan.
+    </noscript>
+
+<!-- LAYAR KEAMANAN -->
+<section id="securityScreen" class="security-screen">
+    <div class="security-card">
+        <div class="security-logo">
+    <span>S</span><span>H</span>
+</div>
+
+        <p class="eyebrow">PRIVATE HABIT TRACKER</p>
+        <h1 id="securityTitle">Saju Habit</h1>
+
+        <p
+            id="securityDescription"
+            class="security-description"
+        >
+            Buat PIN 6 digit untuk melindungi data pribadimu.
+        </p>
+
+        <form id="pinForm" autocomplete="off">
+            <label class="sr-only" for="pinInput">
+                PIN 6 digit
+            </label>
+
+            <input
+                id="pinInput"
+                class="pin-input"
+                type="password"
+                inputmode="numeric"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="••••••"
+                autocomplete="off"
+                required
+            >
+
+            <label
+                id="confirmPinLabel"
+                class="sr-only"
+                for="confirmPinInput"
+            >
+                Konfirmasi PIN
+            </label>
+
+            <input
+                id="confirmPinInput"
+                class="pin-input"
+                type="password"
+                inputmode="numeric"
+                maxlength="6"
+                pattern="[0-9]{6}"
+                placeholder="Ulangi PIN"
+                autocomplete="off"
+                required
+            >
+
+            <p
+                id="pinMessage"
+                class="form-message"
+            ></p>
+
+            <button
+                id="pinSubmitButton"
+                class="button button-primary button-full"
+                type="submit"
+            >
+                Buat PIN
+            </button>
+        </form>
+    </div>
+</section>
+
+    <!-- APLIKASI UTAMA -->
+   <div id="app" class="app-shell is-hidden">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-logo">
+    <span>S</span><span>H</span>
+</div>
+
+                <div>
+                    <strong>Saju Habit</strong>
+                    <span>Private Tracker</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-navigation" aria-label="Navigasi utama">
+                <button class="nav-button is-active" data-page="dashboard">
+                    <span class="nav-icon">⌂</span>
+                    <span>Dashboard</span>
+                </button>
+
+                <button class="nav-button" data-page="habits">
+                    <span class="nav-icon">✓</span>
+                    <span>Kelola Habit</span>
+                </button>
+
+                <button class="nav-button" data-page="history">
+                    <span class="nav-icon">▦</span>
+                    <span>Riwayat</span>
+                </button>
+
+                <button class="nav-button" data-page="settings">
+                    <span class="nav-icon">⚙</span>
+                    <span>Pengaturan</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <span>Data tersimpan secara lokal</span>
+                <strong>Offline & Privat</strong>
+            </div>
+        </aside>
+
+        <div class="app-content">
+            <header class="topbar">
+                <div>
+                    <p id="currentDateText" class="eyebrow">HARI INI</p>
+                    <h2 id="pageTitle">Dashboard</h2>
+                </div>
+
+                <div class="topbar-actions">
+                    <button
+                        id="themeButton"
+                        class="icon-button"
+                        type="button"
+                        aria-label="Ganti tema"
+                        title="Ganti tema"
+                    >
+                        ◐
+                    </button>
+
+                    <button
+                        id="lockButton"
+                        class="icon-button"
+                        type="button"
+                        aria-label="Kunci aplikasi"
+                        title="Kunci aplikasi"
+                    >
+                        🔒
+                    </button>
+                </div>
+            </header>
+
+            <main>
+                <!-- DASHBOARD -->
+                <section id="dashboardPage" class="page is-active">
+                    <div class="welcome-panel">
+                        <div>
+                            <p class="eyebrow">DAILY PROGRESS</p>
+                            <h3 id="welcomeTitle">Bangun konsistensi hari ini.</h3>
+                            <p id="motivationText">
+                                Progres kecil yang dilakukan setiap hari akan menjadi hasil besar.
+                            </p>
+                        </div>
+
+                        <div class="date-control">
+                            <label for="selectedDate">Tanggal checklist</label>
+                            <input id="selectedDate" type="date">
+                        </div>
+                    </div>
+
+                    <div class="stats-grid">
+                        <article class="stat-card">
+                            <span>Total Habit</span>
+                            <strong id="totalHabitStat">0</strong>
+                            <small>Habit aktif</small>
+                        </article>
+
+                        <article class="stat-card">
+                            <span>Selesai</span>
+                            <strong id="completedHabitStat">0</strong>
+                            <small id="completedHabitLabel">Hari ini</small>
+                        </article>
+
+                        <article class="stat-card">
+                            <span>Progres</span>
+                            <strong id="progressStat">0%</strong>
+                            <small>Penyelesaian harian</small>
+                        </article>
+
+                        <article class="stat-card">
+                            <span>Streak Terbaik</span>
+                            <strong id="bestStreakStat">0</strong>
+                            <small>Hari berturut-turut</small>
+                        </article>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <article class="panel habit-panel">
+                            <div class="panel-header">
+                                <div>
+                                    <p class="eyebrow">CHECKLIST</p>
+                                    <h3 id="checklistTitle">Habit hari ini</h3>
+                                </div>
+
+                                <button
+                                    class="button button-primary"
+                                    type="button"
+                                    data-open-habit-modal
+                                >
+                                    + Tambah Habit
+                                </button>
+                            </div>
+
+                            <div id="dailyHabitList" class="daily-habit-list"></div>
+
+                            <div id="emptyHabitState" class="empty-state">
+                                <div class="empty-icon">✓</div>
+                                <h4>Belum ada habit</h4>
+                                <p>Tambahkan habit pertama untuk mulai membangun rutinitas.</p>
+
+                                <button
+                                    class="button button-primary"
+                                    type="button"
+                                    data-open-habit-modal
+                                >
+                                    Tambah Habit
+                                </button>
+                            </div>
+                        </article>
+
+                        <article class="panel chart-panel">
+                            <div class="panel-header">
+                                <div>
+                                    <p class="eyebrow">STATISTIK</p>
+                                    <h3>Progres 7 Hari</h3>
+                                </div>
+                            </div>
+
+                            <div class="chart-container">
+                                <canvas id="weeklyChart"></canvas>
+                            </div>
+
+                            <div class="progress-summary">
+                                <div class="progress-ring" id="progressRing">
+                                    <span id="progressRingValue">0%</span>
+                                </div>
+
+                                <div>
+                                    <strong id="progressMessage">Ayo mulai!</strong>
+                                    <p id="progressDetail">
+                                        Checklist habit yang sudah kamu selesaikan.
+                                    </p>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </section>
+
+                <!-- KELOLA HABIT -->
+                <section id="habitsPage" class="page">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">CUSTOM HABIT</p>
+                            <h3>Kelola Habit</h3>
+                            <p>Tambah, edit, urutkan, nonaktifkan, atau hapus habit.</p>
+                        </div>
+
+                        <button
+                            class="button button-primary"
+                            type="button"
+                            data-open-habit-modal
+                        >
+                            + Tambah Habit
+                        </button>
+                    </div>
+
+                    <div id="habitManagementList" class="management-list"></div>
+                </section>
+
+                <!-- RIWAYAT -->
+                <section id="historyPage" class="page">
+                    <div class="section-heading history-heading">
+                        <div>
+                            <p class="eyebrow">MONTHLY HISTORY</p>
+                            <h3>Riwayat Checklist</h3>
+                            <p>Jumlah kolom tanggal akan menyesuaikan bulan secara otomatis.</p>
+                        </div>
+
+                        <div class="filter-group">
+                            <label for="historyMonth">Pilih bulan</label>
+                            <input id="historyMonth" type="month">
+                        </div>
+                    </div>
+
+                    <div class="history-summary">
+                        <article>
+                            <span>Rata-rata Bulanan</span>
+                            <strong id="monthlyAverage">0%</strong>
+                        </article>
+
+                        <article>
+                            <span>Total Checklist</span>
+                            <strong id="monthlyCompleted">0</strong>
+                        </article>
+
+                        <article>
+                            <span>Hari Sempurna</span>
+                            <strong id="perfectDays">0</strong>
+                        </article>
+                    </div>
+
+                    <div class="history-table-wrapper">
+                        <table id="historyTable" class="history-table">
+                            <thead id="historyTableHead"></thead>
+                            <tbody id="historyTableBody"></tbody>
+                        </table>
+                    </div>
+                </section>
+
+                <!-- PENGATURAN -->
+                <section id="settingsPage" class="page">
+                    <div class="section-heading">
+                        <div>
+                            <p class="eyebrow">DATA & PRIVASI</p>
+                            <h3>Pengaturan</h3>
+                            <p>Kelola keamanan dan cadangan data Saju Habit.</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-grid">
+                        <article class="setting-card">
+                            <h4>Ekspor Data</h4>
+                            <p>Unduh seluruh habit, checklist, dan pengaturan dalam format JSON.</p>
+                            <button id="exportButton" class="button button-secondary" type="button">
+                                Ekspor JSON
+                            </button>
+                        </article>
+
+                        <article class="setting-card">
+                            <h4>Impor Data</h4>
+                            <p>Pulihkan atau pindahkan data Saju Habit dari perangkat lain.</p>
+
+                            <label class="button button-secondary file-button">
+                                Pilih File JSON
+                                <input
+                                    id="importInput"
+                                    type="file"
+                                    accept=".json,application/json"
+                                    hidden
+                                >
+                            </label>
+                        </article>
+
+                        <article class="setting-card">
+                            <h4>Ganti PIN</h4>
+                            <p>Perbarui PIN 6 digit yang digunakan untuk membuka aplikasi.</p>
+                            <button id="changePinButton" class="button button-secondary" type="button">
+                                Ganti PIN
+                            </button>
+                        </article>
+
+                        <article class="setting-card danger-card">
+                            <h4>Hapus Semua Data</h4>
+                            <p>Menghapus seluruh habit dan riwayat checklist dari perangkat ini.</p>
+                            <button id="deleteDataButton" class="button button-danger" type="button">
+                                Hapus Data
+                            </button>
+                        </article>
+                    </div>
+
+                    <article class="privacy-note">
+                        <strong>Privasi Lokal</strong>
+                        <p>
+                            Saju Habit tidak mengirimkan data ke server.
+                            Data PC dan iPhone tersimpan terpisah di masing-masing perangkat.
+                        </p>
+                    </article>
+                </section>
+            </main>
+        </div>
+
+        <!-- NAVIGASI MOBILE -->
+        <nav class="mobile-navigation" aria-label="Navigasi mobile">
+            <button class="mobile-nav-button is-active" data-page="dashboard">
+                <span>⌂</span>
+                <small>Home</small>
+            </button>
+
+            <button class="mobile-nav-button" data-page="habits">
+                <span>✓</span>
+                <small>Habit</small>
+            </button>
+
+            <button class="mobile-nav-button" data-page="history">
+                <span>▦</span>
+                <small>Riwayat</small>
+            </button>
+
+            <button class="mobile-nav-button" data-page="settings">
+                <span>⚙</span>
+                <small>Setting</small>
+            </button>
+        </nav>
+    </div>
+
+    <!-- MODAL TAMBAH DAN EDIT HABIT -->
+    <div id="habitModal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-modal></div>
+
+        <div class="modal-card" role="dialog" aria-modal="true">
+            <div class="modal-header">
+                <div>
+                    <p class="eyebrow">CUSTOM HABIT</p>
+                    <h3 id="habitModalTitle">Tambah Habit</h3>
+                </div>
+
+                <button
+                    class="modal-close"
+                    type="button"
+                    data-close-modal
+                    aria-label="Tutup"
+                >
+                    ×
+                </button>
+            </div>
+
+            <form id="habitForm">
+                <input id="habitId" type="hidden">
+
+                <div class="form-group">
+                    <label for="habitName">Nama habit</label>
+                    <input
+                        id="habitName"
+                        type="text"
+                        maxlength="50"
+                        placeholder="Contoh: Minum air 8 gelas"
+                        required
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="habitCategory">Kategori</label>
+                    <select id="habitCategory">
+                        <option value="Kesehatan">Kesehatan</option>
+                        <option value="Produktivitas">Produktivitas</option>
+                        <option value="Olahraga">Olahraga</option>
+                        <option value="Belajar">Belajar</option>
+                        <option value="Ibadah">Ibadah</option>
+                        <option value="Pribadi">Pribadi</option>
+                        <option value="Lainnya">Lainnya</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="habitColor">Warna habit</label>
+                    <input id="habitColor" type="color" value="#1687ff">
+                </div>
+
+                <div class="modal-actions">
+                    <button
+                        class="button button-ghost"
+                        type="button"
+                        data-close-modal
+                    >
+                        Batal
+                    </button>
+
+                    <button class="button button-primary" type="submit">
+                        Simpan Habit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL KONFIRMASI -->
+    <div id="confirmModal" class="modal" aria-hidden="true">
+        <div class="modal-backdrop" data-close-confirm></div>
+
+        <div class="modal-card confirm-card" role="dialog" aria-modal="true">
+            <div class="confirm-icon">!</div>
+
+            <h3 id="confirmTitle">Konfirmasi</h3>
+            <p id="confirmMessage">Apakah kamu yakin?</p>
+
+            <div class="modal-actions">
+                <button
+                    class="button button-ghost"
+                    type="button"
+                    data-close-confirm
+                >
+                    Batal
+                </button>
+
+                <button id="confirmActionButton" class="button button-danger" type="button">
+                    Hapus
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFIKASI -->
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="storage.js"></script>
+<script src="security.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
