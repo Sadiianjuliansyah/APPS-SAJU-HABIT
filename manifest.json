@@ -1,12 +1,12 @@
 {
-    "id": "./",
+    "id": "/APPS-SAJU-HABIT/",
     "name": "Saju Habit",
 "short_name": "Saju Habit",
     "description": "Aplikasi pribadi untuk melacak kebiasaan harian secara lokal, privat, dan offline.",
     "lang": "id-ID",
     "dir": "ltr",
-    "start_url": "./",
-    "scope": "./",
+    "start_url": "/APPS-SAJU-HABIT/",
+"scope": "/APPS-SAJU-HABIT/",
     "display": "standalone",
     "display_override": [
         "window-controls-overlay",
