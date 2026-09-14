@@ -471,6 +471,130 @@
                         <option value="Lainnya">Lainnya</option>
                     </select>
                 </div>
+                <div class="form-group">
+    <label for="habitScheduleType">
+        Jadwal habit
+    </label>
+
+    <select id="habitScheduleType">
+        <option value="daily">
+            Setiap hari
+        </option>
+
+        <option value="selected_days">
+            Hari tertentu
+        </option>
+
+        <option value="weekly_target">
+            Target mingguan
+        </option>
+    </select>
+
+    <small class="form-help">
+        Jadwal bisa diubah kembali kapan saja.
+    </small>
+</div>
+
+<div
+    id="selectedDaysGroup"
+    class="form-group schedule-group is-hidden"
+>
+    <label>Hari aktif</label>
+
+    <div class="weekday-selector">
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="1"
+            >
+            <span>Sen</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="2"
+            >
+            <span>Sel</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="3"
+            >
+            <span>Rab</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="4"
+            >
+            <span>Kam</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="5"
+            >
+            <span>Jum</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="6"
+            >
+            <span>Sab</span>
+        </label>
+
+        <label class="weekday-option">
+            <input
+                type="checkbox"
+                name="habitWeekday"
+                value="0"
+            >
+            <span>Min</span>
+        </label>
+    </div>
+
+    <small class="form-help">
+        Pilih semua hari saat habit harus dilakukan.
+    </small>
+</div>
+
+<div
+    id="weeklyTargetGroup"
+    class="form-group schedule-group is-hidden"
+>
+    <label for="habitWeeklyTarget">
+        Target per minggu
+    </label>
+
+    <div class="weekly-target-input">
+        <input
+            id="habitWeeklyTarget"
+            type="number"
+            min="1"
+            max="7"
+            value="3"
+        >
+
+        <span>kali / minggu</span>
+    </div>
+
+    <small class="form-help">
+        Habit dapat dilakukan pada hari apa saja sampai target tercapai.
+    </small>
+</div>
 
                 <div class="form-group">
                     <label for="habitColor">Warna habit</label>

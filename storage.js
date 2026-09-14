@@ -2,7 +2,7 @@
 
 window.SajuHabitStorage = (() => {
     const STORAGE_KEY = "saju_habit_private_data_v1";
-    const DATA_VERSION = 1;
+    const DATA_VERSION = 2;
 
     const starterHabits = [
         {
@@ -77,49 +77,102 @@ window.SajuHabitStorage = (() => {
         };
     }
 
-    function normalizeHabit(habit, index) {
-        const now = new Date().toISOString();
+   function normalizeHabit(habit, index) {
+    const now = new Date().toISOString();
 
-        return {
-            id:
-                typeof habit.id === "string" && habit.id
-                    ? habit.id
-                    : createId(),
+    const validScheduleTypes = [
+        "daily",
+        "selected_days",
+        "weekly_target"
+    ];
 
-            name:
-                typeof habit.name === "string" && habit.name.trim()
-                    ? habit.name.trim().slice(0, 50)
-                    : `Habit ${index + 1}`,
+    const requestedScheduleType =
+        validScheduleTypes.includes(habit.scheduleType)
+            ? habit.scheduleType
+            : "daily";
 
-            category:
-                typeof habit.category === "string" && habit.category.trim()
-                    ? habit.category.trim().slice(0, 30)
-                    : "Lainnya",
+    const selectedDays = Array.isArray(
+        habit.selectedDays
+    )
+        ? [
+            ...new Set(
+                habit.selectedDays
+                    .map((day) => Number(day))
+                    .filter(
+                        (day) =>
+                            Number.isInteger(day) &&
+                            day >= 0 &&
+                            day <= 6
+                    )
+            )
+        ]
+        : [];
 
-            color:
-                typeof habit.color === "string" &&
-                /^#[0-9a-f]{6}$/i.test(habit.color)
-                    ? habit.color
-                    : "#1687ff",
+    const scheduleType =
+        requestedScheduleType === "selected_days" &&
+        selectedDays.length === 0
+            ? "daily"
+            : requestedScheduleType;
 
-            active: habit.active !== false,
+    const requestedWeeklyTarget = Number.parseInt(
+        habit.weeklyTarget,
+        10
+    );
 
-            order:
-                Number.isFinite(Number(habit.order))
-                    ? Number(habit.order)
-                    : index,
+    const weeklyTarget = Number.isInteger(
+        requestedWeeklyTarget
+    )
+        ? Math.min(
+            7,
+            Math.max(1, requestedWeeklyTarget)
+        )
+        : 3;
 
-            createdAt:
-                typeof habit.createdAt === "string"
-                    ? habit.createdAt
-                    : now,
+    return {
+        id:
+            typeof habit.id === "string" && habit.id
+                ? habit.id
+                : createId(),
 
-            updatedAt:
-                typeof habit.updatedAt === "string"
-                    ? habit.updatedAt
-                    : now
-        };
-    }
+        name:
+            typeof habit.name === "string" && habit.name.trim()
+                ? habit.name.trim().slice(0, 50)
+                : `Habit ${index + 1}`,
+
+        category:
+            typeof habit.category === "string" &&
+            habit.category.trim()
+                ? habit.category.trim().slice(0, 30)
+                : "Lainnya",
+
+        color:
+            typeof habit.color === "string" &&
+            /^#[0-9a-f]{6}$/i.test(habit.color)
+                ? habit.color
+                : "#1687ff",
+
+        scheduleType,
+        selectedDays,
+        weeklyTarget,
+
+        active: habit.active !== false,
+
+        order:
+            Number.isFinite(Number(habit.order))
+                ? Number(habit.order)
+                : index,
+
+        createdAt:
+            typeof habit.createdAt === "string"
+                ? habit.createdAt
+                : now,
+
+        updatedAt:
+            typeof habit.updatedAt === "string"
+                ? habit.updatedAt
+                : now
+    };
+}
 
     function normalizeChecklists(checklists, validHabitIds) {
         const normalized = {};
@@ -252,29 +305,39 @@ window.SajuHabitStorage = (() => {
         return deepClone(loadData());
     }
 
-    function addHabit({ name, category, color }) {
-        const data = loadData();
-        const now = new Date().toISOString();
+    function addHabit({
+    name,
+    category,
+    color,
+    scheduleType = "daily",
+    selectedDays = [],
+    weeklyTarget = 3
+}) {
+    const data = loadData();
+    const now = new Date().toISOString();
 
-        const newHabit = normalizeHabit(
-            {
-                id: createId(),
-                name,
-                category,
-                color,
-                active: true,
-                order: data.habits.length,
-                createdAt: now,
-                updatedAt: now
-            },
-            data.habits.length
-        );
+    const newHabit = normalizeHabit(
+        {
+            id: createId(),
+            name,
+            category,
+            color,
+            scheduleType,
+            selectedDays,
+            weeklyTarget,
+            active: true,
+            order: data.habits.length,
+            createdAt: now,
+            updatedAt: now
+        },
+        data.habits.length
+    );
 
-        data.habits.push(newHabit);
-        saveData(data);
+    data.habits.push(newHabit);
+    saveData(data);
 
-        return deepClone(newHabit);
-    }
+    return deepClone(newHabit);
+}
 
     function updateHabit(habitId, updates) {
         const data = loadData();
